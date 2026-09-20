@@ -1,2 +1,4 @@
 # aggregate-command_python
-# 集計
+
+Pythonの勉強用。
+料金を集計するコマンドラインツール。
