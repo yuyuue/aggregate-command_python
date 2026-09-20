@@ -50,3 +50,12 @@ Pythonの勉強用。
 - コードは自分で書く。ヒントは方向だけ
 - 書けたらレビューしてもらう
 - 区切りごとに `git push`
+
+## 設計
+
+### 層分け
+- reader
+- validation
+- model
+- controller
+- view
