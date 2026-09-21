@@ -20,3 +20,10 @@ class Expense:
     applicant: str
     category: ExpenseCategory
     amount: int # 練習なのでint型、余裕があれば変更する。
+
+class ExpenseHeader(Enum):
+    DATE = "date"
+    DEPARTMENT = "department"
+    APPLICANT = "applicant"
+    CATEGORY = "category"
+    AMOUNT = "amount"
