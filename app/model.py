@@ -1,14 +1,6 @@
-from datetime import datetime
+from datetime import date
 from dataclasses import dataclass
 from enum import Enum
-
-@dataclass(frozen=True)
-class ExpenceData:
-    datetime: datetime
-    department: Department
-    applicant: str
-    category: ExpenceCategory
-    amout: int # 練習なのでint型、余裕があれば変更する。
 
 class Department(Enum):
     HRS = "Human Resource"
@@ -16,7 +8,15 @@ class Department(Enum):
     ACC = "Account"
     MKT = "Market"
 
-class ExpenceCategory(Enum):
-    transport = "transport"
-    house = "house"
-    Other = "other"
+class ExpenseCategory(Enum):
+    TRANSPORT = "transport"
+    HOUSE = "house"
+    OTHER = "other"
+
+@dataclass(frozen=True)
+class Expense:
+    using_date: date
+    department: Department
+    applicant: str
+    category: ExpenseCategory
+    amount: int # 練習なのでint型、余裕があれば変更する。
