@@ -16,8 +16,12 @@ def read_expenses(path: Path):
     with path.open(newline="", encoding="utf-8") as f:
         reader = DictReader(f)
         for row in reader:
-            expense_list.append(convert_expense(row))
-
+            try:
+                expense_list.append(convert_expense(row))
+            except ValueError as e:
+                print(f'{reader.line_num}: {type(e)}: {e}')
+            except e:
+                print(f'{reader.line_num}: {type(e)}: {e}')
 
 def convert_expense(expense_dict: dict) -> Expense:
     using_date = date.fromisoformat(expense_dict[ExpenseHeader.DATE.value])
