@@ -4,28 +4,36 @@ from pathlib import Path
 
 from model import Department, Expense, ExpenseCategory, ExpenseHeader
 
-# TODO: 全体的に関数に入れる
+def retrieve_expenses_file_path(path_from_root: str = "data/expences.csv") -> Path:
+    here = Path(__file__).resolve()
+    root = here.parent.parent
+    return(Path(root/path_from_root))
 
-here = Path(__file__).resolve()
-root = here.parent.parent
-EXPENSES_PATH_FROM_ROOT = "data/expences.csv"
-path = Path(root/EXPENSES_PATH_FROM_ROOT)
 
-expense_list: list[Expense] = []
+def read_expenses(path: Path):
+    expense_list: list[Expense] = []
 
-with path.open(newline="", encoding="utf-8") as f:
-    reader = DictReader(f)
-    for row in reader:
-        # TODO: 型変換時にValueErrorが出る可能性があるためハンドリング必要
-        using_date = date.fromisoformat(row[ExpenseHeader.DATE.value])
-        department = Department(row[ExpenseHeader.DEPARTMENT.value])
-        applicant = row[ExpenseHeader.APPLICANT.value]
-        category = ExpenseCategory(row[ExpenseHeader.CATEGORY.value])
-        amount = int(row[ExpenseHeader.AMOUNT.value])
-        expense_list.append(Expense(
-            using_date,
-            department,
-            applicant,
-            category,
-            amount
-        ))
+    with path.open(newline="", encoding="utf-8") as f:
+        reader = DictReader(f)
+        for row in reader:
+            expense_list.append(convert_expense(row))
+
+
+def convert_expense(expense_dict: dict) -> Expense:
+    using_date = date.fromisoformat(expense_dict[ExpenseHeader.DATE.value])
+    department = Department(expense_dict[ExpenseHeader.DEPARTMENT.value])
+    applicant = expense_dict[ExpenseHeader.APPLICANT.value]
+    category = ExpenseCategory(expense_dict[ExpenseHeader.CATEGORY.value])
+    amount = int(expense_dict[ExpenseHeader.AMOUNT.value])
+    return Expense(
+        using_date,
+        department,
+        applicant,
+        category,
+        amount
+    )
+
+if __name__ == "__main__":
+    read_expenses(
+        retrieve_expenses_file_path()
+    )
