@@ -5,10 +5,14 @@ reader.py
 from csv import DictReader
 from dataclasses import dataclass
 from datetime import date
+import logging
 from pathlib import Path
 
 from model import Department, Expense, ExpenseCategory, ExpenseHeaderName, ExpenseHeaderKey
 from util.validator import ExpenseValidationError, validate, Rule
+
+logging.basicConfig(format="%(asctime)s [%(levelname)s] %(name)s: %(message)s", level=logging.DEBUG)
+logger = logging.getLogger(__name__) # エントリーポイントを作成したタイミングで移行する。
 
 @dataclass(frozen=True)
 class ReadResult:
@@ -29,10 +33,13 @@ def read_expenses(path: Path) -> ReadResult:
         for row in reader:
             try:
                 valid_expenses[reader.line_num] = convert_expense(row)
+                logger.info(f'{reader.line_num}行目を変換')
             except ExpenseValidationError as e:
                 expense_errors[reader.line_num] = e.__str__()
+                logger.warning(f'{reader.line_num}行目でエラー: {e}')
             except Exception as e:
                 expense_errors[reader.line_num] = e.__str__()
+                logger.error(f'{reader.line_num}行目でエラー: {e}')
 
     return ReadResult(valid_expenses, expense_errors)
 
